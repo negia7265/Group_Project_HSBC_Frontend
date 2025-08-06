@@ -275,7 +275,7 @@ function toggleSection(sectionId) {
 function initializeCharts() {
     // Portfolio Growth Chart - 15 days with profits and losses
     setPerformanceChart();
-});
+};
 async function setPerformanceChart() {
     const portfolioCtx = document.getElementById('portfolioChart');
     if (portfolioCtx) {
