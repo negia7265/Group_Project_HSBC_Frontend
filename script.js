@@ -274,9 +274,19 @@ function toggleSection(sectionId) {
 // Chart initialization
 function initializeCharts() {
     // Portfolio Growth Chart - 15 days with profits and losses
+    setPerformanceChart();
+});
+async function setPerformanceChart() {
     const portfolioCtx = document.getElementById('portfolioChart');
     if (portfolioCtx) {
         // Generate 15 days of data starting from 15 days ago
+        const asset = await fetch(`http://localhost:8888/get_all_profit`);
+        const asset_data = await asset.json();
+        const portfolioData=[]
+        asset_data.map((item) => {
+            portfolioData.push(item.profit);
+        });
+        console.log("Asset Data:", asset_data);
         const labels = [];
         const today = new Date();
         for (let i = 14; i >= 0; i--) {
@@ -286,23 +296,23 @@ function initializeCharts() {
         }
         
         // Portfolio data with losses, recovery, and profits (-40k to +40k range)
-        const portfolioData = [
-            -38000,  // Started with major loss
-            -32000,  // Heavy loss continues
-            -28000,  // Reducing loss
-            -22000,  // Still significant loss
-            -15000,  // Loss reducing
-            -8000,   // Smaller loss
-            -2000,   // Near break even
-            5000,    // Small profit
-            12000,   // Growing profit
-            18000,   // Good growth
-            15000,   // Some decline
-            25000,   // Strong recovery
-            35000,   // Peak profit
-            30000,   // Minor decline
-            38000    // Current strong profit
-        ];
+        // const portfolioData = [
+        //     -38000,  // Started with major loss
+        //     -32000,  // Heavy loss continues
+        //     -28000,  // Reducing loss
+        //     -22000,  // Still significant loss
+        //     -15000,  // Loss reducing
+        //     -8000,   // Smaller loss
+        //     -2000,   // Near break even
+        //     5000,    // Small profit
+        //     12000,   // Growing profit
+        //     18000,   // Good growth
+        //     15000,   // Some decline
+        //     25000,   // Strong recovery
+        //     35000,   // Peak profit
+        //     30000,   // Minor decline
+        //     38000    // Current strong profit
+        // ];
         
         new Chart(portfolioCtx, {
             type: 'line',
@@ -454,6 +464,144 @@ function filterTransactions(type) {
             }
         }
     });
+}
+async function setAssetAllocationChart() {
+   
+    const allocationCtx = document.getElementById('allocationChart');
+    if (allocationCtx) {
+        const asset = await fetch(`http://localhost:8888/get_asset_shares`);
+        const asset_data = await asset.json();
+        console.log("Asset Data:", asset_data);
+        new Chart(allocationCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Stocks', 'Crypto', 'Gold', 'Silver'],
+                datasets: [{
+                    data: [asset_data[0].percent_share,asset_data[1].percent_share,asset_data[2].percent_share, asset_data[3].percent_share],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444'
+                    ],
+                    borderWidth: 0,
+                    cutout: '70%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+async function getAssetPerformance() {
+    const stockRes = await fetch(`http://localhost:8888/get_profit_percent/stock`);
+    const cryptoRes = await fetch(`http://localhost:8888/get_profit_percent/crypto`);
+    const goldRes = await fetch(`http://localhost:8888/get_profit_percent/gold`);
+    const silverRes = await fetch(`http://localhost:8888/get_profit_percent/silver`);
+
+    const stock = await stockRes.json();
+    const crypto = await cryptoRes.json();
+    const gold = await goldRes.json();
+    const silver = await silverRes.json();
+
+    function formatProfit(profit) {
+        const value = parseFloat(profit).toFixed(2);
+        return profit >= 0 ? `+${value}%` : `${value}%`;
+    }
+
+    document.getElementById("stock_percent").textContent = formatProfit(stock[0].profit_percent);
+    document.getElementById("crypto_percent").textContent = formatProfit(crypto[0].profit_percent);
+    document.getElementById("gold_percent").textContent = formatProfit(gold[0].profit_percent);
+    document.getElementById("silver_percent").textContent = formatProfit(silver[0].profit_percent);
+console.log("Asset Performance Data:", { stock, crypto, gold, silver });
+}
+async function getProfit() {
+    const profit = await fetch(`http://localhost:8888/get_profit`);
+    const data = await profit.json();
+    
+    document.getElementById("profit_amount").textContent = `₹ ${data[0].total_profit.toLocaleString()}`;
+
+}
+async function getInvestedAmount() {
+    const invested=await fetch(`http://localhost:8888/total_investment`);
+    const data = await invested.json();
+    document.getElementById("invested_amount").textContent = `₹ ${data[0].total_investment.toLocaleString()}`;
+}
+async function setDate() {
+    const dateElement = document.querySelector(".date");
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-IN', options);
+
+    dateElement.textContent = formattedDate;
+}
+async function loadUserData() {
+    // Fetch and populate user name and budget
+        const userRes = await fetch(`http://localhost:8888/user_details`);
+        const user = await userRes.json();
+        const invested=await fetch(`http://localhost:8888/total_investment`);
+        const invested_data = await invested.json();
+        document.getElementById("user-name").textContent = `Hello ${user[0].user_name}`;
+        document.getElementById("budget-amount").innerHTML =
+            `₹${user[0].budget-invested_data[0].total_investment} <span class="left">left</span>`;
+        console.log("User data loaded:", user);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.page');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetPage = this.getAttribute('data-page');
+            
+            // Remove active class from all nav items and pages
+            navItems.forEach(nav => nav.classList.remove('active'));
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Add active class to clicked nav item and corresponding page
+            this.classList.add('active');
+            document.getElementById(targetPage).classList.add('active');
+        });
+    });
+    
+    // Initialize charts
+    initializeCharts();
+    
+    // Initialize transaction filters
+    initializeTransactionFilters();
+});
+
+// Toggle section functionality
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    section.classList.toggle('collapsed');
+}
+
+// Chart initialization
+function initializeCharts() {
+    // Portfolio Growth Chart - 15 days with profits and losses
+   
 }
 
 // Investment button functionality
