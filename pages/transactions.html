@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -46,39 +47,17 @@
                 <header class="page-header">
                     <h1>Transaction History</h1>
                     <p>Track all your investment activities</p>
-                    <div class="page-actions">
-                        <button class="filter-btn">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <button class="export-btn">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                    </div>
                 </header>
 
-                <div class="transaction-summary">
-                    <div class="summary-item">
-                        <h3>This Month</h3>
-                        <div class="amount">$12,500</div>
-                        <div class="change positive">+8 transactions</div>
+                <div class="transaction-filters-container">
+                    <div class="transaction-filters">
+                        <button class="filter-tab active">All</button>
+                        <button class="filter-tab">Buy</button>
+                        <button class="filter-tab">Sell</button>
                     </div>
-                    <div class="summary-item">
-                        <h3>Total Invested</h3>
-                        <div class="amount">$2,28,760</div>
-                        <div class="change positive">+15.2% growth</div>
-                    </div>
-                    <div class="summary-item">
-                        <h3>Average Transaction</h3>
-                        <div class="amount">$1,562</div>
-                        <div class="change neutral">Per transaction</div>
-                    </div>
-                </div>
-
-                <div class="transaction-filters">
-                    <button class="filter-tab active">All</button>
-                    <button class="filter-tab">Buy</button>
-                    <button class="filter-tab">Sell</button>
-                    <button class="filter-tab">Dividend</button>
+                    <button class="export-btn" id="exportPdf">
+                        <i class="fas fa-download"></i> Export
+                    </button>
                 </div>
 
                 <div class="transaction-table">
@@ -89,7 +68,6 @@
                         <div class="col">Quantity</div>
                         <div class="col">Price</div>
                         <div class="col">Total</div>
-                        <div class="col">Status</div>
                     </div>
                     <div class="table-body">
                         <div class="table-row">
@@ -104,11 +82,8 @@
                                 </div>
                             </div>
                             <div class="col">25 shares</div>
-                            <div class="col">$100.00</div>
-                            <div class="col">$2,500.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
+                            <div class="col">₹100.00</div>
+                            <div class="col">₹2,500.00</div>
                         </div>
                         <div class="table-row">
                             <div class="col">Jan 14, 2025</div>
@@ -122,11 +97,8 @@
                                 </div>
                             </div>
                             <div class="col">15 shares</div>
-                            <div class="col">$120.00</div>
-                            <div class="col">$1,800.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
+                            <div class="col">₹120.00</div>
+                            <div class="col">₹1,800.00</div>
                         </div>
                         <div class="table-row">
                             <div class="col">Jan 13, 2025</div>
@@ -140,29 +112,8 @@
                                 </div>
                             </div>
                             <div class="col">50 units</div>
-                            <div class="col">$64.00</div>
-                            <div class="col">$3,200.00</div>
-                            <div class="col">
-                                <span class="status pending">Pending</span>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 12, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type dividend">Dividend</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>MSFT</strong>
-                                    <span>Microsoft Corp.</span>
-                                </div>
-                            </div>
-                            <div class="col">20 shares</div>
-                            <div class="col">$2.50</div>
-                            <div class="col">$50.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
+                            <div class="col">₹64.00</div>
+                            <div class="col">₹3,200.00</div>
                         </div>
                     </div>
                 </div>
@@ -191,6 +142,140 @@
                 }
             });
         });
+
+        // Export PDF functionality
+        document.getElementById('exportPdf').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.text('Transaction History', 20, 20);
+            
+            // Add date
+            doc.setFontSize(12);
+            doc.text('Generated on: ' + new Date().toLocaleDateString(), 20, 35);
+            
+            // Prepare table data
+            const tableData = [];
+            const rows = document.querySelectorAll('.table-row');
+            
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('.col');
+                const rowData = [
+                    cols[0].textContent.trim(), // Date
+                    cols[1].textContent.trim(), // Type
+                    cols[2].querySelector('strong').textContent + ' - ' + cols[2].querySelector('span').textContent, // Asset
+                    cols[3].textContent.trim(), // Quantity
+                    cols[4].textContent.trim(), // Price
+                    cols[5].textContent.trim()  // Total
+                ];
+                tableData.push(rowData);
+            });
+            
+            // Create table headers
+            const headers = ['Date', 'Type', 'Asset', 'Quantity', 'Price', 'Total'];
+            
+            // Add table
+            let yPosition = 50;
+            
+            // Add headers
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            let xPosition = 20;
+            const columnWidths = [30, 20, 50, 25, 25, 30];
+            
+            headers.forEach((header, index) => {
+                doc.text(header, xPosition, yPosition);
+                xPosition += columnWidths[index];
+            });
+            
+            // Add line under headers
+            doc.line(20, yPosition + 2, 200, yPosition + 2);
+            yPosition += 10;
+            
+            // Add data rows
+            doc.setFont('helvetica', 'normal');
+            tableData.forEach(row => {
+                xPosition = 20;
+                row.forEach((cell, index) => {
+                    // Truncate long text to fit columns
+                    let cellText = cell;
+                    if (cellText.length > 20) {
+                        cellText = cellText.substring(0, 17) + '...';
+                    }
+                    doc.text(cellText, xPosition, yPosition);
+                    xPosition += columnWidths[index];
+                });
+                yPosition += 8;
+                
+                // Add new page if needed
+                if (yPosition > 270) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+            });
+            
+            // Save the PDF
+            doc.save('transaction-history.pdf');
+        });
     </script>
+
+    <style>
+        .transaction-filters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .transaction-filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .export-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .export-btn:hover {
+            background: #45a049;
+            border: 1px solid #07610a;
+            color: white;
+        }
+        
+        .filter-tab {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-tab.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .filter-tab:hover {
+            background: #e0e0e0;
+        }
+        
+        .filter-tab.active:hover {
+            background: #0056b3;
+        }
+    </style>
 </body>
 </html>
