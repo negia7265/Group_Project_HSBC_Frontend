@@ -356,8 +356,8 @@ function updateInvestmentLimit() {
                 limitDisplay.innerHTML = `$${newLimit.toLocaleString()} <span class="left">left</span>`;
             }
             
-            // Save to backend/localStorage
-            localStorage.setItem('investmentLimit', newLimit);
+            // Save to backend/localStorage (Note: Not available in Claude artifacts)
+            // localStorage.setItem('investmentLimit', newLimit);
             alert('Investment limit updated successfully!');
         }
     }
@@ -365,28 +365,18 @@ function updateInvestmentLimit() {
 
 // Load saved settings
 function loadSettings() {
-    const savedLimit = localStorage.getItem('investmentLimit');
-    if (savedLimit) {
-        const limitInput = document.querySelector('.setting-input');
-        const limitDisplay = document.querySelector('.investment-limit .amount');
-        
-        if (limitInput) limitInput.value = savedLimit;
-        if (limitDisplay) {
-            limitDisplay.innerHTML = `$${parseFloat(savedLimit).toLocaleString()} <span class="left">left</span>`;
-        }
-    }
+    // Note: localStorage not available in Claude artifacts
+    // const savedLimit = localStorage.getItem('investmentLimit');
+    // if (savedLimit) {
+    //     const limitInput = document.querySelector('.setting-input');
+    //     const limitDisplay = document.querySelector('.investment-limit .amount');
+    //     
+    //     if (limitInput) limitInput.value = savedLimit;
+    //     if (limitDisplay) {
+    //         limitDisplay.innerHTML = `$${parseFloat(savedLimit).toLocaleString()} <span class="left">left</span>`;
+    //     }
+    // }
 }
-
-// Initialize settings on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadSettings();
-    
-    // Add event listener for settings changes
-    const settingInputs = document.querySelectorAll('.setting-input');
-    settingInputs.forEach(input => {
-        input.addEventListener('change', updateInvestmentLimit);
-    });
-});
 
 // Mobile menu toggle (for smaller screens)
 function toggleMobileMenu() {
@@ -487,18 +477,32 @@ function initializeSearch() {
     }
 }
 
-// Initialize all functionality
-document.addEventListener('DOMContentLoaded', function() {
-    initializeSearch();
+// // Track if this is the initial page load
+// let isInitialLoad = true;
+
+// // Initialize all functionality
+// document.addEventListener('DOMContentLoaded', function() {
+//     loadSettings();
     
-    // Add smooth transitions to all interactive elements
-    const interactiveElements = document.querySelectorAll('button, .nav-item, .card, .asset-item');
-    interactiveElements.forEach(element => {
-        element.style.transition = 'all 0.2s ease';
-    });
+//     // Add event listener for settings changes
+//     const settingInputs = document.querySelectorAll('.setting-input');
+//     settingInputs.forEach(input => {
+//         input.addEventListener('change', updateInvestmentLimit);
+//     });
     
-    // Show welcome notification
-    setTimeout(() => {
-        showNotification('Welcome to your Portfolio Dashboard!', 'success');
-    }, 1000);
-});
+//     initializeSearch();
+    
+//     // Add smooth transitions to all interactive elements
+//     const interactiveElements = document.querySelectorAll('button, .nav-item, .card, .asset-item');
+//     interactiveElements.forEach(element => {
+//         element.style.transition = 'all 0.2s ease';
+//     });
+    
+//     // Show welcome notification only on initial load
+//     if (isInitialLoad) {
+//         setTimeout(() => {
+//             showNotification('Welcome to your Portfolio Dashboard!', 'success');
+//             isInitialLoad = false; // Set to false after first load
+//         }, 1000);
+//     }
+// });
