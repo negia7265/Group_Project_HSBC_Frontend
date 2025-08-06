@@ -7,6 +7,406 @@
     <link rel="stylesheet" href="../styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .asset-allocation-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem;
+        }
+        
+        .allocation-chart {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            flex-shrink: 0;
+        }
+        
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(233, 233, 233, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .legend-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .legend-label {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .legend-percentage {
+            font-weight: 700;
+            color: #374151;
+        }
+        
+        .summary-card {
+            border-radius: 20px;
+            padding: 2rem;
+            color: black;
+            background: white;
+        }
+        
+        .summary-card h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+        
+        .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .change {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .change.positive {
+            color: #10b981;
+        }
+
+        .change.negative {
+            color: #ef4444;
+        }
+        
+        .assets-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .assets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .asset-category {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            min-width: 350px;
+        }
+
+        .asset-category h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .asset-count {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .asset-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .asset-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .asset-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .asset-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .asset-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+
+        .asset-item:hover {
+            border-color: #e2e8f0;
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .asset-info {
+            flex: 1;
+        }
+
+        .asset-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+
+        .asset-info p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .asset-quantity {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .asset-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .asset-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .asset-change {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .asset-change.positive {
+            color: #10b981;
+        }
+
+        .asset-change.negative {
+            color: #ef4444;
+        }
+
+        .asset-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .sell-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sell-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .buy-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .buy-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .precious-metals {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .metal-card {
+            padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metal-card.gold {
+            background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 20%, #ffffff 100%);
+            border-color: #f59e0b;
+        }
+
+        .metal-card.silver {
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 20%, #ffffff 100%);
+            border-color: #64748b;
+        }
+
+        .metal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .metal-info {
+            flex: 1;
+        }
+
+        .metal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .metal-icon {
+            font-size: 20px;
+        }
+
+        .metal-icon.gold {
+            color: #f59e0b;
+        }
+
+        .metal-icon.silver {
+            color: #64748b;
+        }
+
+        .metal-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .metal-quantity {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .metal-price {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .metal-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .metal-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .metal-change {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .metal-change.positive {
+            color: #10b981;
+        }
+
+        .metal-change.negative {
+            color: #ef4444;
+        }
+
+        .metal-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+        
+        .metal-investment {
+            font-size: 12px;
+            color: #7c3aed;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .assets-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .asset-allocation-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .allocation-chart {
+                width: 150px;
+                height: 150px;
+            }
+
+            .assets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -16,10 +416,10 @@
                 <img src="../logo.png" alt="Logo">    
             </div>
             <ul class="nav-menu">
-                <li class="nav-item active" data-page="dashboard" data-tooltip="Dashboard">
+                <li class="nav-item" data-page="dashboard" data-tooltip="Dashboard">
                     <a href="../index.html"><i class="fas fa-th-large"></i></a>
                 </li>
-                <li class="nav-item" data-page="assets" data-tooltip="Assets">
+                <li class="nav-item active" data-page="assets" data-tooltip="Assets">
                     <a href="assets.html"><i class="fas fa-wallet"></i></a>
                 </li>
                 <li class="nav-item" data-page="transactions" data-tooltip="Transactions">
@@ -56,96 +456,317 @@
                     </div>
                     <div class="summary-card">
                         <h3>Asset Allocation</h3>
-                        <div class="allocation-chart">
-                            <canvas id="allocationChart"></canvas>
+                        <div class="asset-allocation-container">
+                            <div class="allocation-chart">
+                                <canvas id="allocationChart"></canvas>
+                            </div>
+                            <div class="chart-legend">
+                                <!-- Legend items will be populated by JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="assets-grid">
+                    <!-- Stocks Section -->
                     <div class="asset-category">
-                        <h3>Stocks</h3>
+                        <h3>Stocks <span class="asset-count">9 holdings</span></h3>
                         <div class="asset-list">
                             <div class="asset-item">
                                 <div class="asset-info">
                                     <h4>AAPL</h4>
                                     <p>Apple Inc.</p>
+                                    <span class="asset-quantity">15 shares</span>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$4,250</span>
-                                    <span class="change positive">+2.5%</span>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹185.43</span>
+                                    <span class="asset-change positive">+2.5%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                             <div class="asset-item">
                                 <div class="asset-info">
                                     <h4>GOOGL</h4>
                                     <p>Alphabet Inc.</p>
+                                    <span class="asset-quantity">8 shares</span>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$3,800</span>
-                                    <span class="change positive">+1.8%</span>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹142.56</span>
+                                    <span class="asset-change positive">+1.8%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                             <div class="asset-item">
                                 <div class="asset-info">
                                     <h4>MSFT</h4>
                                     <p>Microsoft Corp.</p>
+                                    <span class="asset-quantity">12 shares</span>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$5,200</span>
-                                    <span class="change positive">+3.2%</span>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹428.90</span>
+                                    <span class="asset-change positive">+3.2%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>TSLA</h4>
+                                    <p>Tesla Inc.</p>
+                                    <span class="asset-quantity">20 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹248.42</span>
+                                    <span class="asset-change negative">-1.2%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>AMZN</h4>
+                                    <p>Amazon.com Inc.</p>
+                                    <span class="asset-quantity">6 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹186.51</span>
+                                    <span class="asset-change positive">+0.8%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>NVDA</h4>
+                                    <p>NVIDIA Corp.</p>
+                                    <span class="asset-quantity">5 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹875.28</span>
+                                    <span class="asset-change positive">+4.7%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>META</h4>
+                                    <p>Meta Platforms Inc.</p>
+                                    <span class="asset-quantity">10 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹563.92</span>
+                                    <span class="asset-change positive">+2.1%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>NFLX</h4>
+                                    <p>Netflix Inc.</p>
+                                    <span class="asset-quantity">7 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹692.18</span>
+                                    <span class="asset-change negative">-0.6%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>ADBE</h4>
+                                    <p>Adobe Inc.</p>
+                                    <span class="asset-quantity">4 shares</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹587.35</span>
+                                    <span class="asset-change positive">+1.4%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <!-- <button class="buy-btn">Buy</button> -->
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Crypto Section -->
                     <div class="asset-category">
-                        <h3>Bonds & Fixed Income</h3>
+                        <h3>Cryptocurrency <span class="asset-count">8 holdings</span></h3>
                         <div class="asset-list">
                             <div class="asset-item">
                                 <div class="asset-info">
-                                    <h4>US Treasury</h4>
-                                    <p>10-Year Bond</p>
+                                    <h4>BTC</h4>
+                                    <p>Bitcoin</p>
+                                    <span class="asset-quantity">0.25 BTC</span>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$10,000</span>
-                                    <span class="change positive">+0.5%</span>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹67,842.50</span>
+                                    <span class="asset-change negative">-2.3%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                             <div class="asset-item">
                                 <div class="asset-info">
-                                    <h4>Corporate Bonds</h4>
-                                    <p>AAA Rated</p>
+                                    <h4>ETH</h4>
+                                    <p>Ethereum</p>
+                                    <span class="asset-quantity">2.5 ETH</span>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$8,500</span>
-                                    <span class="change positive">+1.2%</span>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹3,284.75</span>
+                                    <span class="asset-change positive">+1.9%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>BNB</h4>
+                                    <p>BNB</p>
+                                    <span class="asset-quantity">15 BNB</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹692.84</span>
+                                    <span class="asset-change positive">+3.4%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>SOL</h4>
+                                    <p>Solana</p>
+                                    <span class="asset-quantity">45 SOL</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹238.92</span>
+                                    <span class="asset-change positive">+5.2%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>XRP</h4>
+                                    <p>XRP</p>
+                                    <span class="asset-quantity">1,200 XRP</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹2.43</span>
+                                    <span class="asset-change negative">-4.1%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>ADA</h4>
+                                    <p>Cardano</p>
+                                    <span class="asset-quantity">800 ADA</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹1.05</span>
+                                    <span class="asset-change positive">+2.7%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>AVAX</h4>
+                                    <p>Avalanche</p>
+                                    <span class="asset-quantity">60 AVAX</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹42.18</span>
+                                    <span class="asset-change negative">-1.8%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>DOT</h4>
+                                    <p>Polkadot</p>
+                                    <span class="asset-quantity">120 DOT</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹8.94</span>
+                                    <span class="asset-change positive">+0.9%</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Precious Metals Section -->
                     <div class="asset-category">
-                        <h3>Alternative Investments</h3>
-                        <div class="asset-list">
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>Gold ETF</h4>
-                                    <p>SPDR Gold Trust</p>
+                        <h3>Precious Metals</h3>
+                        <div class="precious-metals">
+                            <div class="metal-card gold">
+                                <div class="metal-info">
+                                    <div class="metal-header">
+                                        <i class="fas fa-coins metal-icon gold"></i>
+                                        <span class="metal-name">Gold</span>
+                                    </div>
+                                    <div class="metal-quantity">125.5 grams</div>
+                                    <div class="metal-price">₹6,420 per gram</div>
+                                    <div class="metal-investment">Invested: 95.2 grams</div>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$6,200</span>
-                                    <span class="change positive">+4.1%</span>
+                                <div class="metal-details">
+                                    <span class="metal-value">₹8,05,710</span>
+                                    <span class="metal-change positive">+4.1%</span>
+                                </div>
+                                <div class="metal-actions">
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>Bitcoin</h4>
-                                    <p>Cryptocurrency</p>
+                            
+                            <div class="metal-card silver">
+                                <div class="metal-info">
+                                    <div class="metal-header">
+                                        <i class="fas fa-medal metal-icon silver"></i>
+                                        <span class="metal-name">Silver</span>
+                                    </div>
+                                    <div class="metal-quantity">850.2 grams</div>
+                                    <div class="metal-price">₹94 per gram</div>
+                                    <div class="metal-investment">Invested: 720.8 grams</div>
                                 </div>
-                                <div class="asset-value">
-                                    <span class="amount">$3,500</span>
-                                    <span class="change negative">-2.3%</span>
+                                <div class="metal-details">
+                                    <span class="metal-value">₹79,919</span>
+                                    <span class="metal-change positive">+1.8%</span>
+                                </div>
+                                <div class="metal-actions">
+                                    <button class="sell-btn">Sell</button>
                                 </div>
                             </div>
                         </div>
@@ -175,7 +796,158 @@
                     }
                 }
             });
+
+            // Initialize the asset allocation chart
+            setAssetAllocationChart();
         });
+
+        async function setAssetAllocationChart() {
+            const allocationCtx = document.getElementById('allocationChart');
+            if (allocationCtx) {
+                try {
+                    // Try to fetch from API, but fall back to mock data if it fails
+                    let asset_data;
+                    try {
+                        const asset = await fetch(`http://localhost:8888/get_asset_shares`);
+                        asset_data = await asset.json();
+                    } catch (error) {
+                        // Fallback to mock data when API is not available
+                        console.log("API not available, using mock data");
+                        asset_data = [
+                            { percent_share: 45 }, // Stocks
+                            { percent_share: 25 }, // Crypto
+                            { percent_share: 20 }, // Gold
+                            { percent_share: 10 }  // Silver
+                        ];
+                    }
+                    
+                    console.log("Asset Data:", asset_data);
+                    
+                    new Chart(allocationCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Stocks', 'Crypto', 'Gold', 'Silver'],
+                            datasets: [{
+                                data: [
+                                    asset_data[0].percent_share,
+                                    asset_data[1].percent_share,
+                                    asset_data[2].percent_share, 
+                                    asset_data[3].percent_share
+                                ],
+                                backgroundColor: [
+                                    '#3b82f6',
+                                    '#10b981',
+                                    '#f59e0b',
+                                    '#ef4444'
+                                ],
+                                borderWidth: 0,
+                                cutout: '70%'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: '#3b82f6',
+                                    borderWidth: 1,
+                                    cornerRadius: 8,
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.label + ': ' + context.parsed + '%';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Update the legend with actual data
+                    updateChartLegend(asset_data);
+                } catch (error) {
+                    console.error("Error creating chart:", error);
+                }
+            }
+        }
+
+        function updateChartLegend(asset_data) {
+            const legendContainer = document.querySelector('.chart-legend');
+            if (legendContainer) {
+                const labels = ['Stocks', 'Crypto', 'Gold', 'Silver'];
+                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+                
+                legendContainer.innerHTML = '';
+                
+                asset_data.forEach((asset, index) => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background: ${colors[index]};"></div>
+                        <div class="legend-text">
+                            <span class="legend-label">${labels[index]}</span>
+                            <span class="legend-percentage">${asset.percent_share}%</span>
+                        </div>
+                    `;
+                    legendContainer.appendChild(legendItem);
+                });
+            }
+        }
+
+        // Add event listeners for sell buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('sell-btn')) {
+                const assetName = e.target.closest('.asset-item, .metal-card').querySelector('h4, .metal-name').textContent;
+                showNotification(`Sell order initiated for ${assetName}`, 'info');
+            }
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Style the notification
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 14px;
+                font-weight: 500;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
+               
