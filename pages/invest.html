@@ -13,27 +13,29 @@
         <!-- Sidebar -->
         <nav class="sidebar">
             <div class="logo">
-                <i class="fas fa-chart-line"></i>
+                <img src="../logo.png" alt="Logo">    
             </div>
             <ul class="nav-menu">
-                <li class="nav-item" data-page="dashboard">
+                <li class="nav-item active" data-page="dashboard" data-tooltip="Dashboard">
                     <a href="../index.html"><i class="fas fa-th-large"></i></a>
                 </li>
-                <li class="nav-item" data-page="assets">
+                <li class="nav-item" data-page="assets" data-tooltip="Assets">
                     <a href="assets.html"><i class="fas fa-wallet"></i></a>
                 </li>
-                <li class="nav-item active" data-page="invest">
-                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
-                </li>
-                <li class="nav-item" data-page="transactions">
+                <li class="nav-item" data-page="transactions" data-tooltip="Transactions">
                     <a href="transactions.html"><i class="fas fa-exchange-alt"></i></a>
                 </li>
-                <li class="nav-item" data-page="settings">
-                    <a href="settings.html"><i class="fas fa-cog"></i></a>
+                <li class="nav-item" data-page="invest" data-tooltip="Invest More">
+                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
+                </li>
+                <li class="nav-item" data-page="about" data-tooltip="About Us">
+                    <a href="about.html"><i class="fas fa fa-users"></i></a>
                 </li>
             </ul>
-            <div class="user-avatar">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User">
+            <div class="settings-icon" data-tooltip="Settings">
+                <a href="settings.html" data-tooltip="Settings">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
         </nav>
 
