@@ -7,7 +7,217 @@ document.addEventListener("DOMContentLoaded", () => {
     getProfit();
     getAssetPerformance();
     setAssetAllocationChart();
+    setPerformanceChart();
 });
+async function setPerformanceChart() {
+    const portfolioCtx = document.getElementById('portfolioChart');
+    if (portfolioCtx) {
+        // Generate 15 days of data starting from 15 days ago
+        const asset = await fetch(`http://localhost:8888/get_all_profit`);
+        const asset_data = await asset.json();
+        const portfolioData=[]
+        asset_data.map((item) => {
+            portfolioData.push(item.profit);
+        });
+        console.log("Asset Data:", asset_data);
+        const labels = [];
+        const today = new Date();
+        for (let i = 14; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            labels.push(date.getDate() + '/' + (date.getMonth() + 1));
+        }
+
+        // Portfolio data with losses, recovery, and profits (-40k to +40k range)
+        // const portfolioData = [
+        //     -38000,  // Started with major loss
+        //     -32000,  // Heavy loss continues
+        //     -28000,  // Reducing loss
+        //     -22000,  // Still significant loss
+        //     -15000,  // Loss reducing
+        //     -8000,   // Smaller loss
+        //     -2000,   // Near break even
+        //     5000,    // Small profit
+        //     12000,   // Growing profit
+        //     18000,   // Good growth
+        //     15000,   // Some decline
+        //     25000,   // Strong recovery
+        //     35000,   // Peak profit
+        //     30000,   // Minor decline
+        //     38000    // Current strong profit
+        // ];
+        // const portfolioData = [
+        //     -38000,  // Started with major loss
+        //     -32000,  // Heavy loss continues
+        //     -28000,  // Reducing loss
+        //     -22000,  // Still significant loss
+        //     -15000,  // Loss reducing
+        //     -8000,   // Smaller loss
+        //     -2000,   // Near break even
+        //     5000,    // Small profit
+        //     12000,   // Growing profit
+        //     18000,   // Good growth
+        //     15000,   // Some decline
+        //     25000,   // Strong recovery
+        //     35000,   // Peak profit
+        //     30000,   // Minor decline
+        //     38000    // Current strong profit
+        // ];
+
+        new Chart(portfolioCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Portfolio P&L',
+                    data: portfolioData,
+                    borderColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? '#10b981' : '#ef4444';
+                    },
+                    backgroundColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                    },
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? '#10b981' : '#ef4444';
+                    },
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    segment: {
+                        borderColor: function(ctx) {
+                            const value = ctx.p1.parsed.y;
+                            return value >= 0 ? '#10b981' : '#ef4444';
+                        },
+                        backgroundColor: function(ctx) {
+                            const value = ctx.p1.parsed.y;
+                            return value >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                        }
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                const prefix = value >= 0 ? '+₹' : '₹';
+                                return prefix + Math.abs(value).toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    y: {
+                        min: -40000,
+                        max: 40000,
+                        grid: {
+                            color: function(context) {
+                                if (context.tick.value === 0) {
+                                    return '#64748b'; // Darker line at zero
+                                }
+                                return '#f1f5f9';
+                            },
+                            drawBorder: false
+                        },
+                        border: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 12
+                            },
+                            stepSize: 10000,
+                            callback: function(value) {
+                                if (value === 0) {
+                                    return '₹0';
+                                } else if (value >= 0) {
+                                    return '+₹' + (value / 1000) + 'k';
+                                } else {
+                                    return '₹' + (value / 1000) + 'k';
+                                }
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+    }
+
+    // Asset Allocation Chart
+
+}
+
+// Transaction filters
+function initializeTransactionFilters() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            filterTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            // Here you would implement the actual filtering logic
+            const filterType = this.textContent.toLowerCase();
+            filterTransactions(filterType);
+        });
+    });
+}
+
+function filterTransactions(type) {
+    const rows = document.querySelectorAll('.table-row');
+
+    rows.forEach(row => {
+        if (type === 'all') {
+            row.style.display = 'grid';
+        } else {
+            const transactionType = row.querySelector('.transaction-type');
+            if (transactionType && transactionType.textContent.toLowerCase().includes(type)) {
+                row.style.display = 'grid';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+}
 
 async function setAssetAllocationChart() {
     const allocationCtx = document.getElementById('allocationChart');
