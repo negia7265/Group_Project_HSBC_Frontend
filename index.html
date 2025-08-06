@@ -47,12 +47,12 @@
                 <header class="header">
                     <div class="header-left">
                         <h1 id="user-name">Hello, John!</h1>
-                        <p class="date">Monday, June 12, 2025</p>
+                        <p class="date" id="current-date">Loading date...</p>
                     </div>
                     <div class="header-right">
                         <div class="investment-limit">
                             <span class="label">Investment Limit</span>
-                            <span class="amount" id="budget-amount">$45,280 <span class="left">left</span></span>
+                            <span class="amount" id="budget-amount">₹45,280 <span class="left">left</span></span>
                         </div>
                     </div>
                 </header>
@@ -65,11 +65,11 @@
                             <div class="amount" id="invested_amount">₹ 2,28,760</div>
                             <div class="change positive">+12% from last week</div>
                         </div>
-                        <div class="card-chart">
+                        <!-- <div class="card-chart">
                             <svg viewBox="0 0 60 30" class="mini-chart">
                                 <path d="M5,25 Q15,15 25,20 T45,10 T55,15" stroke="#10b981" stroke-width="2" fill="none"/>
                             </svg>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="overview-card">
                         <div class="card-content">
@@ -77,11 +77,11 @@
                             <div class="amount" id="profit_amount">₹ 32,760</div>
                             <div class="change positive">+2% from last week</div>
                         </div>
-                        <div class="card-chart">
+                        <!-- <div class="card-chart">
                             <svg viewBox="0 0 60 30" class="mini-chart">
                                 <path d="M5,20 Q15,10 25,15 T45,8 T55,12" stroke="#10b981" stroke-width="2" fill="none"/>
                             </svg>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -91,10 +91,10 @@
                     <div class="chart-section">
                         <div class="section-header">
                             <h2>Portfolio Growth</h2>
-                            <p>6-month performance overview</p>
+                            <p>15-day performance overview</p>
                             <div class="date-range">
                                 <i class="fas fa-calendar"></i>
-                                Jan 01, 2025 - Aug 31, 2025
+                                Last 15 Days Progress
                             </div>
                         </div>
                         <div class="chart-container">
@@ -137,9 +137,9 @@
                                 <div class="stock-info">
                                     <h4>Silver</h4>
                                     <div class="return positive" id="silver_percent">+14.15%</div>
-                                    <p>Income and Stability</p>
+                                    <p>Precious Metal Investment and Diversification</p>
                                 </div>
-                                <i class="fas fa-file-contract"></i>
+                                <i class="fas fa-medal"></i>
                             </div>
                         </div>
                     </div>
@@ -150,8 +150,27 @@
 
     <script src="script.js"></script>
     <script>
-        // Set active navigation item
+        // Function to get current date in a nice format
+        function getCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return now.toLocaleDateString('en-US', options);
+        }
+
+        // Set active navigation item and update date
         document.addEventListener('DOMContentLoaded', function() {
+            // Update the date to current real date
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = getCurrentDate();
+            }
+
+            // Navigation active state logic
             const currentPath = window.location.pathname;
             const navItems = document.querySelectorAll('.nav-item');
             

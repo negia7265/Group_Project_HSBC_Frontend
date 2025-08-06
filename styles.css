@@ -50,6 +50,7 @@ body {
 }
 
 .nav-menu {
+    margin-top: 40px;
     list-style: none;
     display: flex;
     flex-direction: column;

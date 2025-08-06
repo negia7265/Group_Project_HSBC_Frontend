@@ -1,67 +1,4 @@
 // Navigation functionality
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Document loaded, initializing navigation...");
-    loadUserData();
-    setDate();
-    getInvestedAmount();
-    getProfit();
-    getAssetPerformance();
-});
-async function getAssetPerformance() {
-    const stockRes = await fetch(`http://localhost:8888/get_profit_percent/stock`);
-    const cryptoRes = await fetch(`http://localhost:8888/get_profit_percent/crypto`);
-    const goldRes = await fetch(`http://localhost:8888/get_profit_percent/gold`);
-    const silverRes = await fetch(`http://localhost:8888/get_profit_percent/silver`);
-
-    const stock = await stockRes.json();
-    const crypto = await cryptoRes.json();
-    const gold = await goldRes.json();
-    const silver = await silverRes.json();
-
-    function formatProfit(profit) {
-        const value = parseFloat(profit).toFixed(2);
-        return profit >= 0 ? `+${value}%` : `${value}%`;
-    }
-
-    document.getElementById("stock_percent").textContent = formatProfit(stock[0].profit_percent);
-    document.getElementById("crypto_percent").textContent = formatProfit(crypto[0].profit_percent);
-    document.getElementById("gold_percent").textContent = formatProfit(gold[0].profit_percent);
-    document.getElementById("silver_percent").textContent = formatProfit(silver[0].profit_percent);
-
-    console.log("Asset Performance Data:", { stock, crypto, gold, silver });
-}
-async function getProfit() {
-    const profit = await fetch(`http://localhost:8888/get_profit`);
-    const data = await profit.json();
-    
-    document.getElementById("profit_amount").textContent = `₹ ${data[0].total_profit.toLocaleString()}`;
-
-}
-async function getInvestedAmount() {
-    const invested=await fetch(`http://localhost:8888/total_investment`);
-    const data = await invested.json();
-    document.getElementById("invested_amount").textContent = `₹ ${data[0].total_investment.toLocaleString()}`;
-}
-async function setDate() {
-    const dateElement = document.querySelector(".date");
-
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-IN', options);
-
-    dateElement.textContent = formattedDate;
-}
-async function loadUserData() {
-    // Fetch and populate user name and budget
-        const userRes = await fetch(`http://localhost:8888/user_details`);
-        const user = await userRes.json();
-        const invested=await fetch(`http://localhost:8888/total_investment`);
-        const invested_data = await invested.json();
-        document.getElementById("user-name").textContent = `Hello ${user[0].user_name}`;
-        document.getElementById("budget-amount").innerHTML =
-            `₹${user[0].budget-invested_data[0].total_investment} <span class="left">left</span>`;
-        console.log("User data loaded:", user);
-}
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
     const pages = document.querySelectorAll('.page');
@@ -95,26 +32,73 @@ function toggleSection(sectionId) {
 
 // Chart initialization
 function initializeCharts() {
-    // Portfolio Growth Chart
+    // Portfolio Growth Chart - 15 days with profits and losses
     const portfolioCtx = document.getElementById('portfolioChart');
     if (portfolioCtx) {
+        // Generate 15 days of data starting from 15 days ago
+        const labels = [];
+        const today = new Date();
+        for (let i = 14; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            labels.push(date.getDate() + '/' + (date.getMonth() + 1));
+        }
+        
+        // Portfolio data with losses, recovery, and profits (-40k to +40k range)
+        const portfolioData = [
+            -38000,  // Started with major loss
+            -32000,  // Heavy loss continues
+            -28000,  // Reducing loss
+            -22000,  // Still significant loss
+            -15000,  // Loss reducing
+            -8000,   // Smaller loss
+            -2000,   // Near break even
+            5000,    // Small profit
+            12000,   // Growing profit
+            18000,   // Good growth
+            15000,   // Some decline
+            25000,   // Strong recovery
+            35000,   // Peak profit
+            30000,   // Minor decline
+            38000    // Current strong profit
+        ];
+        
         new Chart(portfolioCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                labels: labels,
                 datasets: [{
-                    label: 'Portfolio Value',
-                    data: [18000, 21000, 19000, 22000, 25000, 28000, 26000, 30000],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    label: 'Portfolio P&L',
+                    data: portfolioData,
+                    borderColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? '#10b981' : '#ef4444';
+                    },
+                    backgroundColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                    },
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#3b82f6',
+                    pointBackgroundColor: function(context) {
+                        const value = context.parsed?.y || 0;
+                        return value >= 0 ? '#10b981' : '#ef4444';
+                    },
                     pointBorderColor: '#ffffff',
                     pointBorderWidth: 2,
                     pointRadius: 6,
-                    pointHoverRadius: 8
+                    pointHoverRadius: 8,
+                    segment: {
+                        borderColor: function(ctx) {
+                            const value = ctx.p1.parsed.y;
+                            return value >= 0 ? '#10b981' : '#ef4444';
+                        },
+                        backgroundColor: function(ctx) {
+                            const value = ctx.p1.parsed.y;
+                            return value >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                        }
+                    }
                 }]
             },
             options: {
@@ -134,7 +118,9 @@ function initializeCharts() {
                         displayColors: false,
                         callbacks: {
                             label: function(context) {
-                                return '$' + context.parsed.y.toLocaleString();
+                                const value = context.parsed.y;
+                                const prefix = value >= 0 ? '+₹' : '₹';
+                                return prefix + Math.abs(value).toLocaleString();
                             }
                         }
                     }
@@ -155,8 +141,15 @@ function initializeCharts() {
                         }
                     },
                     y: {
+                        min: -40000,
+                        max: 40000,
                         grid: {
-                            color: '#f1f5f9',
+                            color: function(context) {
+                                if (context.tick.value === 0) {
+                                    return '#64748b'; // Darker line at zero
+                                }
+                                return '#f1f5f9';
+                            },
                             drawBorder: false
                         },
                         border: {
@@ -167,8 +160,15 @@ function initializeCharts() {
                             font: {
                                 size: 12
                             },
+                            stepSize: 10000,
                             callback: function(value) {
-                                return '$' + (value / 1000) + 'k';
+                                if (value === 0) {
+                                    return '₹0';
+                                } else if (value >= 0) {
+                                    return '+₹' + (value / 1000) + 'k';
+                                } else {
+                                    return '₹' + (value / 1000) + 'k';
+                                }
                             }
                         }
                     }
@@ -269,7 +269,7 @@ document.addEventListener('click', function(e) {
         const investmentAmount = 1000; // This would be the amount they want to invest
         
         if (investmentAmount > currentLimit) {
-            alert('Investment limit exceeded! You have $' + currentLimit + ' remaining for this month.');
+            alert('Investment limit exceeded! You have ₹' + currentLimit + ' remaining for this month.');
             return;
         }
         
@@ -346,7 +346,7 @@ function updateInvestmentLimit() {
             // Update the header display
             const limitDisplay = document.querySelector('.investment-limit .amount');
             if (limitDisplay) {
-                limitDisplay.innerHTML = `$${newLimit.toLocaleString()} <span class="left">left</span>`;
+                limitDisplay.innerHTML = `₹${newLimit.toLocaleString()} <span class="left">left</span>`;
             }
             
             // Save to backend/localStorage (Note: Not available in Claude artifacts)
@@ -451,7 +451,7 @@ function validateInvestmentAmount(amount, availableLimit) {
     }
     
     if (amount > availableLimit) {
-        showNotification(`Investment limit exceeded! You have $${availableLimit.toLocaleString()} remaining.`, 'error');
+        showNotification(`Investment limit exceeded! You have ₹${availableLimit.toLocaleString()} remaining.`, 'error');
         return false;
     }
     
@@ -470,7 +470,7 @@ function initializeSearch() {
     }
 }
 
-// // Track if this is the initial page load
+// Track if this is the initial page load
 // let isInitialLoad = true;
 
 // // Initialize all functionality
