@@ -1,4 +1,67 @@
 // Navigation functionality
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Document loaded, initializing navigation...");
+    loadUserData();
+    setDate();
+    getInvestedAmount();
+    getProfit();
+    getAssetPerformance();
+});
+async function getAssetPerformance() {
+    const stockRes = await fetch(`http://localhost:8888/get_profit_percent/stock`);
+    const cryptoRes = await fetch(`http://localhost:8888/get_profit_percent/crypto`);
+    const goldRes = await fetch(`http://localhost:8888/get_profit_percent/gold`);
+    const silverRes = await fetch(`http://localhost:8888/get_profit_percent/silver`);
+
+    const stock = await stockRes.json();
+    const crypto = await cryptoRes.json();
+    const gold = await goldRes.json();
+    const silver = await silverRes.json();
+
+    function formatProfit(profit) {
+        const value = parseFloat(profit).toFixed(2);
+        return profit >= 0 ? `+${value}%` : `${value}%`;
+    }
+
+    document.getElementById("stock_percent").textContent = formatProfit(stock[0].profit_percent);
+    document.getElementById("crypto_percent").textContent = formatProfit(crypto[0].profit_percent);
+    document.getElementById("gold_percent").textContent = formatProfit(gold[0].profit_percent);
+    document.getElementById("silver_percent").textContent = formatProfit(silver[0].profit_percent);
+
+    console.log("Asset Performance Data:", { stock, crypto, gold, silver });
+}
+async function getProfit() {
+    const profit = await fetch(`http://localhost:8888/get_profit`);
+    const data = await profit.json();
+    
+    document.getElementById("profit_amount").textContent = `₹ ${data[0].total_profit.toLocaleString()}`;
+
+}
+async function getInvestedAmount() {
+    const invested=await fetch(`http://localhost:8888/total_investment`);
+    const data = await invested.json();
+    document.getElementById("invested_amount").textContent = `₹ ${data[0].total_investment.toLocaleString()}`;
+}
+async function setDate() {
+    const dateElement = document.querySelector(".date");
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-IN', options);
+
+    dateElement.textContent = formattedDate;
+}
+async function loadUserData() {
+    // Fetch and populate user name and budget
+        const userRes = await fetch(`http://localhost:8888/user_details`);
+        const user = await userRes.json();
+        const invested=await fetch(`http://localhost:8888/total_investment`);
+        const invested_data = await invested.json();
+        document.getElementById("user-name").textContent = `Hello ${user[0].user_name}`;
+        document.getElementById("budget-amount").innerHTML =
+            `₹${user[0].budget-invested_data[0].total_investment} <span class="left">left</span>`;
+        console.log("User data loaded:", user);
+}
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
     const pages = document.querySelectorAll('.page');
