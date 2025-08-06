@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Management - Transactions</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item" data-page="dashboard">
+                    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+                </li>
+                <li class="nav-item" data-page="assets">
+                    <a href="assets.html"><i class="fas fa-wallet"></i></a>
+                </li>
+                <li class="nav-item" data-page="invest">
+                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
+                </li>
+                <li class="nav-item active" data-page="transactions">
+                    <a href="transactions.html"><i class="fas fa-exchange-alt"></i></a>
+                </li>
+                <li class="nav-item" data-page="settings">
+                    <a href="settings.html"><i class="fas fa-cog"></i></a>
+                </li>
+            </ul>
+            <div class="user-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User">
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Transactions Page -->
+            <div id="transactions" class="page active">
+                <header class="page-header">
+                    <h1>Transaction History</h1>
+                    <p>Track all your investment activities</p>
+                    <div class="page-actions">
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="export-btn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </header>
+
+                <div class="transaction-summary">
+                    <div class="summary-item">
+                        <h3>This Month</h3>
+                        <div class="amount">$12,500</div>
+                        <div class="change positive">+8 transactions</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Total Invested</h3>
+                        <div class="amount">$2,28,760</div>
+                        <div class="change positive">+15.2% growth</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Average Transaction</h3>
+                        <div class="amount">$1,562</div>
+                        <div class="change neutral">Per transaction</div>
+                    </div>
+                </div>
+
+                <div class="transaction-filters">
+                    <button class="filter-tab active">All</button>
+                    <button class="filter-tab">Buy</button>
+                    <button class="filter-tab">Sell</button>
+                    <button class="filter-tab">Dividend</button>
+                </div>
+
+                <div class="transaction-table">
+                    <div class="table-header">
+                        <div class="col">Date</div>
+                        <div class="col">Type</div>
+                        <div class="col">Asset</div>
+                        <div class="col">Quantity</div>
+                        <div class="col">Price</div>
+                        <div class="col">Total</div>
+                        <div class="col">Status</div>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col">Jan 15, 2025</div>
+                            <div class="col">
+                                <span class="transaction-type buy">Buy</span>
+                            </div>
+                            <div class="col">
+                                <div class="asset-info">
+                                    <strong>AAPL</strong>
+                                    <span>Apple Inc.</span>
+                                </div>
+                            </div>
+                            <div class="col">25 shares</div>
+                            <div class="col">$100.00</div>
+                            <div class="col">$2,500.00</div>
+                            <div class="col">
+                                <span class="status completed">Completed</span>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col">Jan 14, 2025</div>
+                            <div class="col">
+                                <span class="transaction-type sell">Sell</span>
+                            </div>
+                            <div class="col">
+                                <div class="asset-info">
+                                    <strong>TSLA</strong>
+                                    <span>Tesla Inc.</span>
+                                </div>
+                            </div>
+                            <div class="col">15 shares</div>
+                            <div class="col">$120.00</div>
+                            <div class="col">$1,800.00</div>
+                            <div class="col">
+                                <span class="status completed">Completed</span>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col">Jan 13, 2025</div>
+                            <div class="col">
+                                <span class="transaction-type buy">Buy</span>
+                            </div>
+                            <div class="col">
+                                <div class="asset-info">
+                                    <strong>GLD</strong>
+                                    <span>SPDR Gold Trust</span>
+                                </div>
+                            </div>
+                            <div class="col">50 units</div>
+                            <div class="col">$64.00</div>
+                            <div class="col">$3,200.00</div>
+                            <div class="col">
+                                <span class="status pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="col">Jan 12, 2025</div>
+                            <div class="col">
+                                <span class="transaction-type dividend">Dividend</span>
+                            </div>
+                            <div class="col">
+                                <div class="asset-info">
+                                    <strong>MSFT</strong>
+                                    <span>Microsoft Corp.</span>
+                                </div>
+                            </div>
+                            <div class="col">20 shares</div>
+                            <div class="col">$2.50</div>
+                            <div class="col">$50.00</div>
+                            <div class="col">
+                                <span class="status completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Set active navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const link = item.querySelector('a');
+                if (link) {
+                    const linkPath = link.getAttribute('href');
+                    const fileName = currentPath.split('/').pop();
+                    // Check if current file matches the link
+                    if (linkPath.includes(fileName) || 
+                        (fileName === 'transactions.html' && linkPath === 'transactions.html')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

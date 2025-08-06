@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Management - Settings</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item" data-page="dashboard">
+                    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+                </li>
+                <li class="nav-item" data-page="assets">
+                    <a href="assets.html"><i class="fas fa-wallet"></i></a>
+                </li>
+                <li class="nav-item" data-page="invest">
+                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
+                </li>
+                <li class="nav-item" data-page="transactions">
+                    <a href="transactions.html"><i class="fas fa-exchange-alt"></i></a>
+                </li>
+                <li class="nav-item active" data-page="settings">
+                    <a href="settings.html"><i class="fas fa-cog"></i></a>
+                </li>
+            </ul>
+            <div class="user-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User">
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Settings Page -->
+            <div id="settings" class="page active">
+                <header class="page-header">
+                    <h1>Settings</h1>
+                    <p>Manage your account and preferences</p>
+                </header>
+                
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Investment Preferences</h3>
+                        <div class="setting-item">
+                            <label>Monthly Investment Limit</label>
+                            <input type="number" value="45280" class="setting-input">
+                        </div>
+                        <div class="setting-item">
+                            <label>Risk Tolerance</label>
+                            <select class="setting-select">
+                                <option>Conservative</option>
+                                <option selected>Moderate</option>
+                                <option>Aggressive</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Notifications</h3>
+                        <div class="setting-item">
+                            <label>Email Notifications</label>
+                            <input type="checkbox" checked class="setting-checkbox">
+                        </div>
+                        <div class="setting-item">
+                            <label>Price Alerts</label>
+                            <input type="checkbox" checked class="setting-checkbox">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Set active navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const link = item.querySelector('a');
+                if (link) {
+                    const linkPath = link.getAttribute('href');
+                    const fileName = currentPath.split('/').pop();
+                    // Check if current file matches the link
+                    if (linkPath.includes(fileName) || 
+                        (fileName === 'settings.html' && linkPath === 'settings.html')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

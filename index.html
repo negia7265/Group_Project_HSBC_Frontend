@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Management</title>
+    <title>Portfolio Management - Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,19 +17,19 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item active" data-page="dashboard">
-                    <i class="fas fa-th-large"></i>
+                    <a href="index.html"><i class="fas fa-th-large"></i></a>
                 </li>
                 <li class="nav-item" data-page="assets">
-                    <i class="fas fa-wallet"></i>
+                    <a href="pages/assets.html"><i class="fas fa-wallet"></i></a>
                 </li>
                 <li class="nav-item" data-page="invest">
-                    <i class="fas fa-chart-bar"></i>
+                    <a href="pages/invest.html"><i class="fas fa-chart-bar"></i></a>
                 </li>
                 <li class="nav-item" data-page="transactions">
-                    <i class="fas fa-exchange-alt"></i>
+                    <a href="pages/transactions.html"><i class="fas fa-exchange-alt"></i></a>
                 </li>
                 <li class="nav-item" data-page="settings">
-                    <i class="fas fa-cog"></i>
+                    <a href="pages/settings.html"><i class="fas fa-cog"></i></a>
                 </li>
             </ul>
             <div class="user-avatar">
@@ -142,484 +142,31 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Additional Sections -->
-                <!-- <div class="additional-sections">
-                    <div class="section-card collapsed" id="investMoreSection">
-                        <div class="section-header clickable" onclick="toggleSection('investMoreSection')">
-                            <h3>Invest More</h3>
-                            <button class="expand-btn">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="section-content">
-                            <div class="invest-options">
-                                <div class="invest-option">
-                                    <div class="option-icon">📈</div>
-                                    <h4>Mutual Funds</h4>
-                                    <p>Diversified portfolio management</p>
-                                    <button class="invest-btn">Invest Now</button>
-                                </div>
-                                <div class="invest-option">
-                                    <div class="option-icon">🏢</div>
-                                    <h4>Real Estate</h4>
-                                    <p>Property investment opportunities</p>
-                                    <button class="invest-btn">Invest Now</button>
-                                </div>
-                                <div class="invest-option">
-                                    <div class="option-icon">💎</div>
-                                    <h4>Commodities</h4>
-                                    <p>Raw materials and precious metals</p>
-                                    <button class="invest-btn">Invest Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section-card collapsed" id="transactionSection">
-                        <div class="section-header clickable" onclick="toggleSection('transactionSection')">
-                            <h3>Recent Transactions</h3>
-                            <button class="expand-btn">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="section-content">
-                            <div class="transaction-list">
-                                <div class="transaction-item">
-                                    <div class="transaction-icon buy">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </div>
-                                    <div class="transaction-details">
-                                        <h4>Buy AAPL</h4>
-                                        <p>Apple Inc. - 25 shares</p>
-                                        <span class="date">Jan 15, 2025</span>
-                                    </div>
-                                    <div class="transaction-amount">$2,500</div>
-                                </div>
-                                <div class="transaction-item">
-                                    <div class="transaction-icon sell">
-                                        <i class="fas fa-arrow-down"></i>
-                                    </div>
-                                    <div class="transaction-details">
-                                        <h4>Sell TSLA</h4>
-                                        <p>Tesla Inc. - 15 shares</p>
-                                        <span class="date">Jan 14, 2025</span>
-                                    </div>
-                                    <div class="transaction-amount">$1,800</div>
-                                </div>
-                                <div class="transaction-item">
-                                    <div class="transaction-icon buy">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </div>
-                                    <div class="transaction-details">
-                                        <h4>Buy Gold ETF</h4>
-                                        <p>SPDR Gold Trust - 50 units</p>
-                                        <span class="date">Jan 13, 2025</span>
-                                    </div>
-                                    <div class="transaction-amount">$3,200</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-            </div>
-
-            <!-- Assets Page -->
-            <div id="assets" class="page">
-                <header class="page-header">
-                    <h1>Assets Overview</h1>
-                    <p>Manage your investment portfolio</p>
-                </header>
-                
-                <div class="assets-summary">
-                    <div class="summary-card">
-                        <h3>Total Assets</h3>
-                        <div class="amount">₹ 2,61,520</div>
-                        <div class="change positive">+15.2% this month</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Asset Allocation</h3>
-                        <div class="allocation-chart">
-                            <canvas id="allocationChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="assets-grid">
-                    <div class="asset-category">
-                        <h3>Stocks</h3>
-                        <div class="asset-list">
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>AAPL</h4>
-                                    <p>Apple Inc.</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$4,250</span>
-                                    <span class="change positive">+2.5%</span>
-                                </div>
-                            </div>
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>GOOGL</h4>
-                                    <p>Alphabet Inc.</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$3,800</span>
-                                    <span class="change positive">+1.8%</span>
-                                </div>
-                            </div>
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>MSFT</h4>
-                                    <p>Microsoft Corp.</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$5,200</span>
-                                    <span class="change positive">+3.2%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="asset-category">
-                        <h3>Bonds & Fixed Income</h3>
-                        <div class="asset-list">
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>US Treasury</h4>
-                                    <p>10-Year Bond</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$10,000</span>
-                                    <span class="change positive">+0.5%</span>
-                                </div>
-                            </div>
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>Corporate Bonds</h4>
-                                    <p>AAA Rated</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$8,500</span>
-                                    <span class="change positive">+1.2%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="asset-category">
-                        <h3>Alternative Investments</h3>
-                        <div class="asset-list">
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>Gold ETF</h4>
-                                    <p>SPDR Gold Trust</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$6,200</span>
-                                    <span class="change positive">+4.1%</span>
-                                </div>
-                            </div>
-                            <div class="asset-item">
-                                <div class="asset-info">
-                                    <h4>Bitcoin</h4>
-                                    <p>Cryptocurrency</p>
-                                </div>
-                                <div class="asset-value">
-                                    <span class="amount">$3,500</span>
-                                    <span class="change negative">-2.3%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Invest More Page -->
-            <div id="invest" class="page">
-                <header class="page-header">
-                    <h1>Investment Opportunities</h1>
-                    <p>Discover new ways to grow your wealth</p>
-                </header>
-
-                <div class="investment-categories">
-                    <div class="category-card featured">
-                        <div class="category-header">
-                            <h3>Recommended for You</h3>
-                            <span class="badge">AI Powered</span>
-                        </div>
-                        <div class="investment-options">
-                            <div class="investment-card">
-                                <div class="investment-icon">🚀</div>
-                                <h4>Tech Growth Fund</h4>
-                                <p>High-growth technology companies</p>
-                                <div class="investment-stats">
-                                    <span class="return">+18.5% YTD</span>
-                                    <span class="risk">Medium Risk</span>
-                                </div>
-                                <button class="invest-button primary">Invest Now</button>
-                            </div>
-                            <div class="investment-card">
-                                <div class="investment-icon">🌱</div>
-                                <h4>ESG Sustainable Fund</h4>
-                                <p>Environmental and social responsibility</p>
-                                <div class="investment-stats">
-                                    <span class="return">+12.3% YTD</span>
-                                    <span class="risk">Low Risk</span>
-                                </div>
-                                <button class="invest-button primary">Invest Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="category-grid">
-                        <div class="category-card">
-                            <h3>Stocks & ETFs</h3>
-                            <div class="category-content">
-                                <div class="investment-item">
-                                    <span class="name">S&P 500 ETF</span>
-                                    <span class="return positive">+11.2%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">NASDAQ 100</span>
-                                    <span class="return positive">+15.8%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Emerging Markets</span>
-                                    <span class="return positive">+8.9%</span>
-                                </div>
-                            </div>
-                            <button class="category-button">Explore Stocks</button>
-                        </div>
-
-                        <div class="category-card">
-                            <h3>Bonds & Fixed Income</h3>
-                            <div class="category-content">
-                                <div class="investment-item">
-                                    <span class="name">Government Bonds</span>
-                                    <span class="return positive">+3.5%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Corporate Bonds</span>
-                                    <span class="return positive">+5.2%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Municipal Bonds</span>
-                                    <span class="return positive">+4.1%</span>
-                                </div>
-                            </div>
-                            <button class="category-button">Explore Bonds</button>
-                        </div>
-
-                        <div class="category-card">
-                            <h3>Alternative Investments</h3>
-                            <div class="category-content">
-                                <div class="investment-item">
-                                    <span class="name">Real Estate REITs</span>
-                                    <span class="return positive">+9.7%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Commodities</span>
-                                    <span class="return positive">+6.3%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Cryptocurrency</span>
-                                    <span class="return positive">+22.1%</span>
-                                </div>
-                            </div>
-                            <button class="category-button">Explore Alternatives</button>
-                        </div>
-
-                        <div class="category-card">
-                            <h3>Mutual Funds</h3>
-                            <div class="category-content">
-                                <div class="investment-item">
-                                    <span class="name">Large Cap Fund</span>
-                                    <span class="return positive">+13.4%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">Mid Cap Fund</span>
-                                    <span class="return positive">+16.8%</span>
-                                </div>
-                                <div class="investment-item">
-                                    <span class="name">International Fund</span>
-                                    <span class="return positive">+10.2%</span>
-                                </div>
-                            </div>
-                            <button class="category-button">Explore Funds</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Transactions Page -->
-            <div id="transactions" class="page">
-                <header class="page-header">
-                    <h1>Transaction History</h1>
-                    <p>Track all your investment activities</p>
-                    <div class="page-actions">
-                        <button class="filter-btn">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <button class="export-btn">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                    </div>
-                </header>
-
-                <div class="transaction-summary">
-                    <div class="summary-item">
-                        <h3>This Month</h3>
-                        <div class="amount">$12,500</div>
-                        <div class="change positive">+8 transactions</div>
-                    </div>
-                    <div class="summary-item">
-                        <h3>Total Invested</h3>
-                        <div class="amount">$2,28,760</div>
-                        <div class="change positive">+15.2% growth</div>
-                    </div>
-                    <div class="summary-item">
-                        <h3>Average Transaction</h3>
-                        <div class="amount">$1,562</div>
-                        <div class="change neutral">Per transaction</div>
-                    </div>
-                </div>
-
-                <div class="transaction-filters">
-                    <button class="filter-tab active">All</button>
-                    <button class="filter-tab">Buy</button>
-                    <button class="filter-tab">Sell</button>
-                    <button class="filter-tab">Dividend</button>
-                </div>
-
-                <div class="transaction-table">
-                    <div class="table-header">
-                        <div class="col">Date</div>
-                        <div class="col">Type</div>
-                        <div class="col">Asset</div>
-                        <div class="col">Quantity</div>
-                        <div class="col">Price</div>
-                        <div class="col">Total</div>
-                        <div class="col">Status</div>
-                    </div>
-                    <div class="table-body">
-                        <div class="table-row">
-                            <div class="col">Jan 15, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type buy">Buy</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>AAPL</strong>
-                                    <span>Apple Inc.</span>
-                                </div>
-                            </div>
-                            <div class="col">25 shares</div>
-                            <div class="col">$100.00</div>
-                            <div class="col">$2,500.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 14, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type sell">Sell</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>TSLA</strong>
-                                    <span>Tesla Inc.</span>
-                                </div>
-                            </div>
-                            <div class="col">15 shares</div>
-                            <div class="col">$120.00</div>
-                            <div class="col">$1,800.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 13, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type buy">Buy</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>GLD</strong>
-                                    <span>SPDR Gold Trust</span>
-                                </div>
-                            </div>
-                            <div class="col">50 units</div>
-                            <div class="col">$64.00</div>
-                            <div class="col">$3,200.00</div>
-                            <div class="col">
-                                <span class="status pending">Pending</span>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 12, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type dividend">Dividend</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>MSFT</strong>
-                                    <span>Microsoft Corp.</span>
-                                </div>
-                            </div>
-                            <div class="col">20 shares</div>
-                            <div class="col">$2.50</div>
-                            <div class="col">$50.00</div>
-                            <div class="col">
-                                <span class="status completed">Completed</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Page -->
-            <div id="settings" class="page">
-                <header class="page-header">
-                    <h1>Settings</h1>
-                    <p>Manage your account and preferences</p>
-                </header>
-                
-                <div class="settings-content">
-                    <div class="settings-section">
-                        <h3>Investment Preferences</h3>
-                        <div class="setting-item">
-                            <label>Monthly Investment Limit</label>
-                            <input type="number" value="45280" class="setting-input">
-                        </div>
-                        <div class="setting-item">
-                            <label>Risk Tolerance</label>
-                            <select class="setting-select">
-                                <option>Conservative</option>
-                                <option selected>Moderate</option>
-                                <option>Aggressive</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-section">
-                        <h3>Notifications</h3>
-                        <div class="setting-item">
-                            <label>Email Notifications</label>
-                            <input type="checkbox" checked class="setting-checkbox">
-                        </div>
-                        <div class="setting-item">
-                            <label>Price Alerts</label>
-                            <input type="checkbox" checked class="setting-checkbox">
-                        </div>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Set active navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const link = item.querySelector('a');
+                if (link) {
+                    const linkPath = link.getAttribute('href');
+                    // Check if current path matches or ends with the link path
+                    if (currentPath.endsWith(linkPath) || 
+                        (currentPath.endsWith('/') && linkPath === 'index.html') ||
+                        (currentPath.endsWith('index.html') && linkPath === 'index.html')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

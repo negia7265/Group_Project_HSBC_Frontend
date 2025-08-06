@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Management - Invest</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item" data-page="dashboard">
+                    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+                </li>
+                <li class="nav-item" data-page="assets">
+                    <a href="assets.html"><i class="fas fa-wallet"></i></a>
+                </li>
+                <li class="nav-item active" data-page="invest">
+                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
+                </li>
+                <li class="nav-item" data-page="transactions">
+                    <a href="transactions.html"><i class="fas fa-exchange-alt"></i></a>
+                </li>
+                <li class="nav-item" data-page="settings">
+                    <a href="settings.html"><i class="fas fa-cog"></i></a>
+                </li>
+            </ul>
+            <div class="user-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User">
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Invest More Page -->
+            <div id="invest" class="page active">
+                <header class="page-header">
+                    <h1>Investment Opportunities</h1>
+                    <p>Discover new ways to grow your wealth</p>
+                </header>
+
+                <div class="investment-categories">
+                    <div class="category-card featured">
+                        <div class="category-header">
+                            <h3>Recommended for You</h3>
+                            <span class="badge">AI Powered</span>
+                        </div>
+                        <div class="investment-options">
+                            <div class="investment-card">
+                                <div class="investment-icon">🚀</div>
+                                <h4>Tech Growth Fund</h4>
+                                <p>High-growth technology companies</p>
+                                <div class="investment-stats">
+                                    <span class="return">+18.5% YTD</span>
+                                    <span class="risk">Medium Risk</span>
+                                </div>
+                                <button class="invest-button primary">Invest Now</button>
+                            </div>
+                            <div class="investment-card">
+                                <div class="investment-icon">🌱</div>
+                                <h4>ESG Sustainable Fund</h4>
+                                <p>Environmental and social responsibility</p>
+                                <div class="investment-stats">
+                                    <span class="return">+12.3% YTD</span>
+                                    <span class="risk">Low Risk</span>
+                                </div>
+                                <button class="invest-button primary">Invest Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="category-grid">
+                        <div class="category-card">
+                            <h3>Stocks & ETFs</h3>
+                            <div class="category-content">
+                                <div class="investment-item">
+                                    <span class="name">S&P 500 ETF</span>
+                                    <span class="return positive">+11.2%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">NASDAQ 100</span>
+                                    <span class="return positive">+15.8%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Emerging Markets</span>
+                                    <span class="return positive">+8.9%</span>
+                                </div>
+                            </div>
+                            <button class="category-button">Explore Stocks</button>
+                        </div>
+
+                        <div class="category-card">
+                            <h3>Bonds & Fixed Income</h3>
+                            <div class="category-content">
+                                <div class="investment-item">
+                                    <span class="name">Government Bonds</span>
+                                    <span class="return positive">+3.5%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Corporate Bonds</span>
+                                    <span class="return positive">+5.2%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Municipal Bonds</span>
+                                    <span class="return positive">+4.1%</span>
+                                </div>
+                            </div>
+                            <button class="category-button">Explore Bonds</button>
+                        </div>
+
+                        <div class="category-card">
+                            <h3>Alternative Investments</h3>
+                            <div class="category-content">
+                                <div class="investment-item">
+                                    <span class="name">Real Estate REITs</span>
+                                    <span class="return positive">+9.7%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Commodities</span>
+                                    <span class="return positive">+6.3%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Cryptocurrency</span>
+                                    <span class="return positive">+22.1%</span>
+                                </div>
+                            </div>
+                            <button class="category-button">Explore Alternatives</button>
+                        </div>
+
+                        <div class="category-card">
+                            <h3>Mutual Funds</h3>
+                            <div class="category-content">
+                                <div class="investment-item">
+                                    <span class="name">Large Cap Fund</span>
+                                    <span class="return positive">+13.4%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">Mid Cap Fund</span>
+                                    <span class="return positive">+16.8%</span>
+                                </div>
+                                <div class="investment-item">
+                                    <span class="name">International Fund</span>
+                                    <span class="return positive">+10.2%</span>
+                                </div>
+                            </div>
+                            <button class="category-button">Explore Funds</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Set active navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const link = item.querySelector('a');
+                if (link) {
+                    const linkPath = link.getAttribute('href');
+                    const fileName = currentPath.split('/').pop();
+                    // Check if current file matches the link
+                    if (linkPath.includes(fileName) || 
+                        (fileName === 'invest.html' && linkPath === 'invest.html')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

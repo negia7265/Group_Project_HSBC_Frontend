@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Management - Assets</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item" data-page="dashboard">
+                    <a href="../index.html"><i class="fas fa-th-large"></i></a>
+                </li>
+                <li class="nav-item active" data-page="assets">
+                    <a href="assets.html"><i class="fas fa-wallet"></i></a>
+                </li>
+                <li class="nav-item" data-page="invest">
+                    <a href="invest.html"><i class="fas fa-chart-bar"></i></a>
+                </li>
+                <li class="nav-item" data-page="transactions">
+                    <a href="transactions.html"><i class="fas fa-exchange-alt"></i></a>
+                </li>
+                <li class="nav-item" data-page="settings">
+                    <a href="settings.html"><i class="fas fa-cog"></i></a>
+                </li>
+            </ul>
+            <div class="user-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User">
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Assets Page -->
+            <div id="assets" class="page active">
+                <header class="page-header">
+                    <h1>Assets Overview</h1>
+                    <p>Manage your investment portfolio</p>
+                </header>
+                
+                <div class="assets-summary">
+                    <div class="summary-card">
+                        <h3>Total Assets</h3>
+                        <div class="amount">₹ 2,61,520</div>
+                        <div class="change positive">+15.2% this month</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Asset Allocation</h3>
+                        <div class="allocation-chart">
+                            <canvas id="allocationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assets-grid">
+                    <div class="asset-category">
+                        <h3>Stocks</h3>
+                        <div class="asset-list">
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>AAPL</h4>
+                                    <p>Apple Inc.</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$4,250</span>
+                                    <span class="change positive">+2.5%</span>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>GOOGL</h4>
+                                    <p>Alphabet Inc.</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$3,800</span>
+                                    <span class="change positive">+1.8%</span>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>MSFT</h4>
+                                    <p>Microsoft Corp.</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$5,200</span>
+                                    <span class="change positive">+3.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="asset-category">
+                        <h3>Bonds & Fixed Income</h3>
+                        <div class="asset-list">
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>US Treasury</h4>
+                                    <p>10-Year Bond</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$10,000</span>
+                                    <span class="change positive">+0.5%</span>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>Corporate Bonds</h4>
+                                    <p>AAA Rated</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$8,500</span>
+                                    <span class="change positive">+1.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="asset-category">
+                        <h3>Alternative Investments</h3>
+                        <div class="asset-list">
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>Gold ETF</h4>
+                                    <p>SPDR Gold Trust</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$6,200</span>
+                                    <span class="change positive">+4.1%</span>
+                                </div>
+                            </div>
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>Bitcoin</h4>
+                                    <p>Cryptocurrency</p>
+                                </div>
+                                <div class="asset-value">
+                                    <span class="amount">$3,500</span>
+                                    <span class="change negative">-2.3%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Set active navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const link = item.querySelector('a');
+                if (link) {
+                    const linkPath = link.getAttribute('href');
+                    const fileName = currentPath.split('/').pop();
+                    // Check if current file matches the link
+                    if (linkPath.includes(fileName) || 
+                        (fileName === 'assets.html' && linkPath === 'assets.html')) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
