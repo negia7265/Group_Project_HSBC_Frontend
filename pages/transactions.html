@@ -69,52 +69,9 @@
                         <div class="col">Price</div>
                         <div class="col">Total</div>
                     </div>
-                    <div class="table-body">
-                        <div class="table-row">
-                            <div class="col">Jan 15, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type buy">Buy</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>AAPL</strong>
-                                    <span>Apple Inc.</span>
-                                </div>
-                            </div>
-                            <div class="col">25 shares</div>
-                            <div class="col">₹100.00</div>
-                            <div class="col">₹2,500.00</div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 14, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type sell">Sell</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>TSLA</strong>
-                                    <span>Tesla Inc.</span>
-                                </div>
-                            </div>
-                            <div class="col">15 shares</div>
-                            <div class="col">₹120.00</div>
-                            <div class="col">₹1,800.00</div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col">Jan 13, 2025</div>
-                            <div class="col">
-                                <span class="transaction-type buy">Buy</span>
-                            </div>
-                            <div class="col">
-                                <div class="asset-info">
-                                    <strong>GLD</strong>
-                                    <span>SPDR Gold Trust</span>
-                                </div>
-                            </div>
-                            <div class="col">50 units</div>
-                            <div class="col">₹64.00</div>
-                            <div class="col">₹3,200.00</div>
-                        </div>
+                    <div class="table-body" id="transaction-body">
+                        
+                       
                     </div>
                 </div>
             </div>
@@ -220,6 +177,61 @@
             doc.save('transaction-history.pdf');
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('transaction-body');
+        
+            try {
+                const response = await fetch('http://localhost:8888/transactions');
+                const data = await response.json();
+        
+                let html = '';
+        
+                data.forEach(txn => {
+                    const date = new Date(txn.transaction_date).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    });
+        
+                    const price = txn.price.toFixed(2);
+                    const total = txn.total_value.toFixed(2);
+                    const quantity = txn.quantity;
+                    const statusText = Math.random() > 0.7 ? 'Pending' : 'Completed';
+                    const statusClass = statusText.toLowerCase();
+        
+                    const typeClass = txn.transaction_type.toLowerCase();
+        
+                    html += `
+                        <div class="table-row">
+                            <div class="col">${date}</div>
+                            <div class="col">
+                                <span class="transaction-type ${typeClass}">${txn.transaction_type}</span>
+                            </div>
+                            <div class="col">
+                                <div class="asset-info">
+                                    <strong>${txn.ticker_symbol || txn.asset_type}</strong>
+                                    <span>${txn.asset_name}</span>
+                                </div>
+                            </div>
+                            <div class="col">${quantity} ${txn.asset_type === 'stock' ? 'shares' : 'units'}</div>
+                            <div class="col">$${price}</div>
+                            <div class="col">$${total}</div>
+                            
+                        </div>
+                    `;
+                });
+        
+                container.innerHTML = html;
+        
+            } catch (err) {
+                container.innerHTML = `
+                    <div class="table-row">
+                        <div class="col" colspan="7">Failed to load transactions.</div>
+                    </div>
+                `;
+                console.error(err);
+            }
+        });
+        </script>
 
     <style>
         .transaction-filters-container {
