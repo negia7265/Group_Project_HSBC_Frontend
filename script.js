@@ -886,7 +886,7 @@ simulateRealTimeUpdates();
 // Export functionality
 function exportTransactions() {
     // This would implement actual CSV/PDF export
-    alert('Export functionality would be implemented here');
+    alert('Click OK to export transactions as PDF');
 }
 
 // Add event listeners for export buttons

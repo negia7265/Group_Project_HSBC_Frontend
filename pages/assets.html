@@ -608,6 +608,7 @@
                             </div>
                         </div>
                     </div>
+                    
 
                     <!-- Crypto Section -->
                     <div class="asset-category">
@@ -948,6 +949,52 @@
             }, 3000);
         }
     </script>
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("http://localhost:8888/holdstock")
+                .then(response => response.json())
+                .then(data => {
+                    const stocksContainer = document.querySelectorAll(".asset-category")[0].querySelector(".asset-list");
+                    const cryptoContainer = document.querySelectorAll(".asset-category")[1].querySelector(".asset-list");
+        
+                    // Clear existing hardcoded items
+                    stocksContainer.innerHTML = "";
+                    cryptoContainer.innerHTML = "";
+        
+                    data.forEach(asset => {
+                        const change = (((asset.current_price - asset.buy_price) / asset.buy_price) * 100).toFixed(1);
+                        const isPositive = change >= 0;
+                        const changeClass = isPositive ? 'positive' : 'negative';
+                        const changeText = `${isPositive ? '+' : ''}${change}%`;
+        
+                        const assetHTML = `
+                            <div class="asset-item">
+                                <div class="asset-info">
+                                    <h4>${asset.ticker_symbol}</h4>
+                                    <p>${asset.asset_name}</p>
+                                    <span class="asset-quantity">${asset.quantity} ${asset.asset_type === 'crypto' ? asset.ticker_symbol : 'shares'}</span>
+                                </div>
+                                <div class="asset-details">
+                                    <span class="asset-price">₹${asset.current_price}</span>
+                                    <span class="asset-change ${changeClass}">${changeText}</span>
+                                </div>
+                                <div class="asset-actions">
+                                    <button class="sell-btn">Sell</button>
+                                </div>
+                            </div>
+                        `;
+        
+                        if (asset.asset_type === 'stock') {
+                            stocksContainer.innerHTML += assetHTML;
+                        } else if (asset.asset_type === 'crypto') {
+                            cryptoContainer.innerHTML += assetHTML;
+                        }
+                    });
+                })
+                .catch(error => console.error("Error fetching assets:", error));
+        });
+        </script> -->
+        
 </body>
 </html>
                
