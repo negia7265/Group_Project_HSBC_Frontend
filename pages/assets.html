@@ -469,9 +469,9 @@
 
                 <div class="assets-grid">
                     <!-- Stocks Section -->
-                    <div class="asset-category">
-                        <h3>Stocks <span class="asset-count">9 holdings</span></h3>
-                        <div class="asset-list">
+                    <div class="asset-category" id="stock_category">
+                        <h3>Stocks <span class="asset-count" id="stock_holding_count">9 holdings</span></h3>
+                        <div class="asset-list" id="stock_asset_list">
                             <div class="asset-item">
                                 <div class="asset-info">
                                     <h4>AAPL</h4>
@@ -611,8 +611,8 @@
 
                     <!-- Crypto Section -->
                     <div class="asset-category">
-                        <h3>Cryptocurrency <span class="asset-count">8 holdings</span></h3>
-                        <div class="asset-list">
+                        <h3>Cryptocurrency <span class="asset-count" id="crypto_holding_count">8 holdings</span></h3>
+                        <div class="asset-list" id="crypto_asset_list">
                             <div class="asset-item">
                                 <div class="asset-info">
                                     <h4>BTC</h4>
@@ -738,13 +738,13 @@
                                         <i class="fas fa-coins metal-icon gold"></i>
                                         <span class="metal-name">Gold</span>
                                     </div>
-                                    <div class="metal-quantity">125.5 grams</div>
-                                    <div class="metal-price">₹6,420 per gram</div>
-                                    <div class="metal-investment">Invested: 95.2 grams</div>
+                                    <div class="metal-quantity" id="gold_metal_quantity">125.5 grams</div>
+                                    <div class="metal-price" id="gold_metal_rate">₹6,420 per gram</div>
+                                    
                                 </div>
                                 <div class="metal-details">
-                                    <span class="metal-value">₹8,05,710</span>
-                                    <span class="metal-change positive">+4.1%</span>
+                                    <span class="metal-value" id="gold_metal_value">₹8,05,710</span>
+                            
                                 </div>
                                 <div class="metal-actions">
                                     <button class="sell-btn">Sell</button>
@@ -757,13 +757,13 @@
                                         <i class="fas fa-medal metal-icon silver"></i>
                                         <span class="metal-name">Silver</span>
                                     </div>
-                                    <div class="metal-quantity">850.2 grams</div>
-                                    <div class="metal-price">₹94 per gram</div>
-                                    <div class="metal-investment">Invested: 720.8 grams</div>
+                                    <div class="metal-quantity" id="silver_metal_quantity">850.2 grams</div>
+                                    <div class="metal-price" id="silver_metal_rate">₹94 per gram</div>
+                                 
                                 </div>
                                 <div class="metal-details">
-                                    <span class="metal-value">₹79,919</span>
-                                    <span class="metal-change positive">+1.8%</span>
+                                    <span class="metal-value" id="silver_metal_value">₹79,919</span>
+                                  
                                 </div>
                                 <div class="metal-actions">
                                     <button class="sell-btn">Sell</button>

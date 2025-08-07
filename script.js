@@ -8,7 +8,120 @@ document.addEventListener("DOMContentLoaded", () => {
     getAssetPerformance();
     setAssetAllocationChart();
     setPerformanceChart();
+    loadStockHoldings();
+    loadCryptoHoldings();
+    loadGoldHoldings();
+    loadSilverHoldings();
 });
+// Load Gold Holdings
+async function loadGoldHoldings() {
+    try{
+        const response = await fetch('http://localhost:8888/get_gold_overview'); // Adjust URL if needed
+        const data = await response.json();
+       
+        document.getElementById('gold_metal_quantity').textContent = `${data[0].total_quantity} grams`;
+        document.getElementById('gold_metal_rate').textContent = `₹${data[0].current_price} per gram`;
+        document.getElementById('gold_metal_value').textContent = `₹${data[0].total_value}`;
+       
+    } catch (err) {
+        console.error('Failed to load gold holdings:', err);
+    }
+}
+async function loadSilverHoldings() {
+    try{
+        const response = await fetch('http://localhost:8888/get_silver_overview'); // Adjust URL if needed
+        const data = await response.json();
+       
+        document.getElementById('silver_metal_quantity').textContent = `${data[0].total_quantity} grams`;
+        document.getElementById('silver_metal_rate').textContent = `₹${data[0].current_price} per gram`;
+        document.getElementById('silver_metal_value').textContent = `₹${data[0].total_value}`;
+       
+    } catch (err) {
+        console.error('Failed to load gold holdings:', err);
+    }
+}
+async function loadCryptoHoldings() {
+    try {
+        const response = await fetch('http://localhost:8888/get_crypto_overview'); // Adjust URL if needed
+        const data = await response.json();
+        console.log("Stock Holdings Data:", data);
+        const assetList = document.getElementById('crypto_asset_list');
+        const countSpan = document.getElementById('crypto_holding_count');
+  
+        assetList.innerHTML = ''; // Clear existing items
+        countSpan.textContent = `${data.length} holdings`;
+  
+        data.forEach(asset => {
+          
+        //   const isPositive = asset.change_percent >= 0;
+        //   const changeClass = isPositive ? 'positive' : 'negative';
+        //   const changeSign = isPositive ? '+' : '';
+  
+          const item = document.createElement('div');
+          item.className = 'asset-item';
+          item.innerHTML = `
+            <div class="asset-info">
+              <h4>${asset.ticker_symbol}</h4>
+              <p>${asset.asset_name}</p>
+              <span class="asset-quantity">${asset.total_quantity} shares</span>
+            </div>
+            <div class="asset-details">
+              <span class="asset-price">₹${asset.current_price}</span>
+              
+            </div>
+            <div class="asset-actions">
+              <button class="sell-btn">Sell</button>
+            </div>
+          `;
+  
+          assetList.appendChild(item);
+        });
+  
+      } catch (err) {
+        console.error('Failed to load holdings:', err);
+      }
+}
+async function loadStockHoldings() {
+    try {
+        const response = await fetch('http://localhost:8888/get_stock_overview'); // Adjust URL if needed
+        const data = await response.json();
+       
+        const assetList = document.getElementById('stock_asset_list');
+        const countSpan = document.getElementById('stock_holding_count');
+  
+        assetList.innerHTML = ''; // Clear existing items
+        countSpan.textContent = `${data.length} holdings`;
+  
+        data.forEach(asset => {
+            console.log("Processing asset:", asset);
+        //   const isPositive = asset.change_percent >= 0;
+        //   const changeClass = isPositive ? 'positive' : 'negative';
+        //   const changeSign = isPositive ? '+' : '';
+  
+          const item = document.createElement('div');
+          item.className = 'asset-item';
+          item.innerHTML = `
+            <div class="asset-info">
+              <h4>${asset.ticker_symbol}</h4>
+              <p>${asset.asset_name}</p>
+              <span class="asset-quantity">${asset.total_quantity} shares</span>
+            </div>
+            <div class="asset-details">
+              <span class="asset-price">₹${asset.current_price}</span>
+              
+            </div>
+            <div class="asset-actions">
+              <button class="sell-btn">Sell</button>
+            </div>
+          `;
+  
+          assetList.appendChild(item);
+        });
+  
+      } catch (err) {
+        console.error('Failed to load holdings:', err);
+      }
+}
 async function setPerformanceChart() {
     const portfolioCtx = document.getElementById('portfolioChart');
     if (portfolioCtx) {
